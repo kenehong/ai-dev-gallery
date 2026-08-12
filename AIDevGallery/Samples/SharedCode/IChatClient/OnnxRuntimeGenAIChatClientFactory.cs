@@ -27,7 +27,7 @@ internal static class OnnxRuntimeGenAIChatClientFactory
 
         try
         {
-            var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+            await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
         }
         catch (Exception ex)
         {
@@ -53,6 +53,12 @@ internal static class OnnxRuntimeGenAIChatClientFactory
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     var config = new Config(modelDir);
+
+                    // ponytail: amdgpu-ep.dll access-violations on load on this machine. GenAI's WinML
+                    // build auto-registers every certified EP at model-create time (a native path the
+                    // managed catalog skip can't reach), so clear the auto EP list and run CPU-only.
+                    // Remove this ClearProviders() line once the AMD GPU EP is fixed to restore GPU/NPU.
+                    config.ClearProviders();
                     if (!string.IsNullOrEmpty(provider))
                     {
                         config.AppendProvider(provider);

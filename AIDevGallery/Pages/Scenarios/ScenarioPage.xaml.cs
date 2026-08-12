@@ -150,7 +150,7 @@ internal sealed partial class ScenarioPage : Page
 
         try
         {
-            var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+            await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
         }
         catch (Exception ex)
         {
@@ -419,6 +419,24 @@ internal sealed partial class ScenarioPage : Page
         {
             SampleContainer.HideCode();
         }
+    }
+
+    // ponytail: Concept A (minimal) — one always-visible "Docs" button routing to the detail page that
+    // already exists for the selected model: the API page for a Windows AI (WCR) API, else the model page.
+    // Avoids duplicating readme/snippet rendering inline (which only WCR APIs have data for).
+    private void DocsButton_Click(object sender, RoutedEventArgs e)
+    {
+        var model = modelDetails.FirstOrDefault(m => m != null &&
+                        ModelTypeHelpers.ApiDefinitionDetails.Any(md => md.Value.Id == m!.Id))
+                    ?? modelDetails.FirstOrDefault(m => m != null);
+
+        if (model == null)
+        {
+            return;
+        }
+
+        var isApi = ModelTypeHelpers.ApiDefinitionDetails.Any(md => md.Value.Id == model.Id);
+        App.MainWindow.Navigate(isApi ? "apis" : "Models", model);
     }
 
     private void ExportSampleToggle_Click(object sender, RoutedEventArgs e)

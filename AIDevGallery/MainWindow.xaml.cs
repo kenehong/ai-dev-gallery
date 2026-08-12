@@ -72,6 +72,7 @@ internal sealed partial class MainWindow : WindowEx
     {
         uiSettings.ColorValuesChanged += Accessibility_HighContrastChanged;
         UpdateResources();
+        pickerRedesign.Show(); // ponytail: sandbox preview, remove before PR
     }
 
     private async Task LoadAppSearchIndex()

@@ -83,7 +83,7 @@ internal sealed partial class Multipose : BaseSamplePage
 
             try
             {
-                var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+                await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ internal sealed partial class Multipose : BaseSamplePage
 
             try
             {
-                var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+                await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
             }
             catch (Exception ex)
             {

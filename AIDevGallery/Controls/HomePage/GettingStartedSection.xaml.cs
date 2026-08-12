@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AIDevGallery.Controls;
@@ -12,18 +13,20 @@ internal sealed partial class GettingStartedSection : UserControl
         this.InitializeComponent();
     }
 
-    private void APIButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void Card_Click(object sender, RoutedEventArgs e)
     {
-        App.MainWindow.Navigate("APIs");
-    }
+        if (sender is not FrameworkElement { Tag: string id } || string.IsNullOrEmpty(id))
+        {
+            return;
+        }
 
-    private void ModelsBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        App.MainWindow.Navigate("Models");
-    }
-
-    private void SamplesBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        App.MainWindow.Navigate("Samples");
+        if (App.FindScenarioById(id) is { } scenario)
+        {
+            App.MainWindow.NavigateToPage(scenario);
+        }
+        else
+        {
+            App.MainWindow.Navigate(id);
+        }
     }
 }

@@ -64,7 +64,7 @@ internal sealed partial class SpeechRecognition : BaseSamplePage
         try
         {
             var catalog = ExecutionProviderCatalog.GetDefault();
-            await catalog.EnsureAndRegisterCertifiedAsync();
+            await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
 
             var readyState = SpeechRecognitionModel.GetReadyState();
             if (readyState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady)

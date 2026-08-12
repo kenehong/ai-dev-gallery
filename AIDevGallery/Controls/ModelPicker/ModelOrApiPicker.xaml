@@ -54,11 +54,111 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="0,0,0,1"
                 CornerRadius="{StaticResource OverlayCornerRadius}">
-                <TextBlock
-                    Margin="16"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="Select a model to use for this sample" />
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Margin="16,16,4,16"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="Select a model to use for this sample" />
+                    <Button
+                        x:Name="HelpMeChooseButton"
+                        Width="24"
+                        Height="24"
+                        MinWidth="0"
+                        MinHeight="0"
+                        Padding="0"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        AutomationProperties.Name="What's the difference between these?"
+                        ToolTipService.ToolTip="What's the difference between these?">
+                        <FontIcon
+                            FontSize="12"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Glyph="&#xE897;" />
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom">
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="MaxWidth" Value="600" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+                                <StackPanel Width="540" Spacing="16">
+                                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Two ways to add AI to your app" />
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border
+                                            Grid.Column="0"
+                                            Padding="16"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="{ThemeResource OverlayCornerRadius}">
+                                            <StackPanel Spacing="8">
+                                                <FontIcon
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="24"
+                                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                    Glyph="&#xE81E;" />
+                                                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Windows AI APIs" />
+                                                <TextBlock
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Text="Use AI that's already built into Windows"
+                                                    TextWrapping="Wrap" />
+                                                <TextBlock
+                                                    Text="Call ready-made features with no model to download or manage — the fastest way to add AI for common tasks. Requires a Copilot+ PC."
+                                                    TextWrapping="Wrap" />
+                                                <HyperlinkButton
+                                                    Margin="0,4,0,0"
+                                                    Content="Learn more"
+                                                    NavigateUri="https://learn.microsoft.com/windows/ai/apis/" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border
+                                            Grid.Column="1"
+                                            Padding="16"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="{ThemeResource OverlayCornerRadius}">
+                                            <StackPanel Spacing="8">
+                                                <FontIcon
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="24"
+                                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                    Glyph="&#xF158;" />
+                                                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Custom models" />
+                                                <TextBlock
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Text="Download and run your own model"
+                                                    TextWrapping="Wrap" />
+                                                <TextBlock
+                                                    Text="Pick from hundreds of models, download one, and run it locally with full control — plus export-ready code. Works on many PCs."
+                                                    TextWrapping="Wrap" />
+                                                <HyperlinkButton
+                                                    Margin="0,4,0,0"
+                                                    Content="Learn more"
+                                                    NavigateUri="https://learn.microsoft.com/windows/ai/overview" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <InfoBar
+                                        IsClosable="False"
+                                        IsOpen="True"
+                                        Message="Not sure? Start with Windows AI APIs — you can switch to a custom model anytime."
+                                        Severity="Informational" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
                 <Button
                     x:Name="CancelButton"
                     Margin="12"

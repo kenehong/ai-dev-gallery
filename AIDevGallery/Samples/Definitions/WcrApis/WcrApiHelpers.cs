@@ -160,7 +160,7 @@ internal static class WcrApiHelpers
         {
             progress.Report(0);
             var catalog = ExecutionProviderCatalog.GetDefault();
-            await catalog.EnsureAndRegisterCertifiedAsync().AsTask(cancellationToken);
+            await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
 
             var inner = SpeechRecognitionModel.EnsureReadyAsync();
             inner.Progress = (_, p) => progress.Report(p.Progress);

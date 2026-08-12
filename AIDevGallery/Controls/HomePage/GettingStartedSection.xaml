@@ -8,333 +8,365 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style
-            x:Key="HeroCardGridStyle"
-            BasedOn="{StaticResource CardGridStyle}"
-            TargetType="Grid">
-            <Style.Setters>
-                <Setter Property="Padding" Value="16,12,16,16" />
-                <Setter Property="Background" Value="{ThemeResource CardGradient2Brush}" />
-            </Style.Setters>
+        <Style x:Key="GoalCardStyle" TargetType="Grid">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style x:Key="GoalCardButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="Root"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="CardScale" />
+                            </Border.RenderTransform>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="CardScale"
+                                                Storyboard.TargetProperty="ScaleX"
+                                                To="1.03"
+                                                Duration="0:0:0.15" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="CardScale"
+                                                Storyboard.TargetProperty="ScaleY"
+                                                To="1.03"
+                                                Duration="0:0:0.15" />
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                                            <Setter Target="Root.BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="CardScale"
+                                                Storyboard.TargetProperty="ScaleX"
+                                                To="0.98"
+                                                Duration="0:0:0.1" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="CardScale"
+                                                Storyboard.TargetProperty="ScaleY"
+                                                To="0.98"
+                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                                            <Setter Target="Root.BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PlaceholderImageStyle" TargetType="Border">
+            <Setter Property="Height" Value="160" />
+            <Setter Property="CornerRadius" Value="8,8,0,0" />
+            <Setter Property="Background" Value="{ThemeResource ControlStrongFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+        <Style x:Key="TagPillStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="8,2,8,2" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="TagTextStyle" BasedOn="{StaticResource CaptionTextBlockStyle}" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
         </Style>
     </UserControl.Resources>
     <Grid
         x:Name="ContentGrid"
         Margin="24,0,24,24"
-        ColumnSpacing="24"
         RowSpacing="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <StackPanel
-            Grid.ColumnSpan="5"
-            HorizontalAlignment="Center"
-            Orientation="Vertical">
-            <TextBlock
-                HorizontalAlignment="Center"
-                Style="{StaticResource TitleTextBlockStyle}"
-                Text="Features" />
-            <TextBlock
-                HorizontalAlignment="Center"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                Text="Discover how AI Dev Gallery helps you add on-device AI to your app" />
-        </StackPanel>
+
+        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="What are you trying to build?" />
+
         <Grid
-            x:Name="SamplesFeatureGrid"
             Grid.Row="1"
-            Grid.ColumnSpan="3"
-            Style="{StaticResource HeroCardGridStyle}">
+            ColumnSpacing="24"
+            RowSpacing="24">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel
-                HorizontalAlignment="Left"
-                Orientation="Vertical"
-                Spacing="8">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="Interactive samples"
-                    TextWrapping="Wrap" />
-                <TextBlock Text="Explore over 25+ interactive samples running locally on your NPU, GPU or CPU" TextWrapping="Wrap" />
-            </StackPanel>
-            <Grid
-                Grid.Column="1"
-                Height="160"
-                Margin="0,0,-120,-76"
-                VerticalAlignment="Stretch"
-                CornerRadius="16"
-                RequestedTheme="Light"
-                Style="{StaticResource GlassAcrylicGridStyle}">
-                <Border CornerRadius="8">
-                    <Image AutomationProperties.AccessibilityView="Raw" Source="ms-appx:///Assets/TileImages/TextGeneration.png" />
+
+            <!-- Add local chat -->
+            <Button
+                Style="{StaticResource GoalCardButtonStyle}"
+                Tag="chat"
+                Click="Card_Click"
+                AutomationProperties.Name="Add local chat to my app">
+                <Grid Style="{StaticResource GoalCardStyle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource PlaceholderImageStyle}">
+                    <Image Source="ms-appx:///Assets/TileImages/Chat.png" Stretch="UniformToFill" />
                 </Border>
-            </Grid>
-
-            <HyperlinkButton
-                x:Name="SamplesBtn"
-                Grid.Row="1"
-                Padding="0"
-                AutomationProperties.Name="Explore samples"
-                Click="SamplesBtn_Click">
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock Text="Explore samples" />
-                    <FontIcon FontSize="12" Glyph="&#xE76C;" />
-                </StackPanel>
-            </HyperlinkButton>
-        </Grid>
-        <Grid
-            x:Name="WCRFeatureGrid"
-            Grid.Row="1"
-            Grid.Column="3"
-            Grid.ColumnSpan="2"
-            MinHeight="176"
-            Background="{ThemeResource CardGradient1Brush}"
-            Style="{StaticResource HeroCardGridStyle}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel
-                HorizontalAlignment="Left"
-                Orientation="Vertical"
-                Spacing="8">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="Windows AI APIs"
-                    TextWrapping="Wrap" />
-                <TextBlock Text="Experience the full potential of the Windows AI APIs" TextWrapping="Wrap" />
-                <HyperlinkButton
-                    x:Name="APIButton"
+                <StackPanel
                     Grid.Row="1"
-                    Padding="0"
-                    AutomationProperties.Name="Explore APIs"
-                    Click="APIButton_Click">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <TextBlock Text="Explore APIs" />
-                        <FontIcon FontSize="12" Glyph="&#xE76C;" />
-                    </StackPanel>
-                </HyperlinkButton>
-            </StackPanel>
-            <Image
-                Grid.Row="1"
-                Width="96"
-                Margin="0,-24,-28,-28"
-                HorizontalAlignment="Right"
-                AutomationProperties.AccessibilityView="Raw"
-                Source="ms-appx:///Assets/ModelIcons/WCRAPI.svg" />
-        </Grid>
-        <Grid
-            x:Name="ModelsFeatureGrid"
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
-            Background="{ThemeResource CardGradient1Brush}"
-            Style="{StaticResource HeroCardGridStyle}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel
-                HorizontalAlignment="Left"
-                Orientation="Vertical"
-                Spacing="8">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="Bring your own model"
-                    TextWrapping="Wrap" />
-                <TextBlock Text="Discover, download and experiment with different models at your fingertips" TextWrapping="Wrap" />
-                <HyperlinkButton
-                    x:Name="ModelsBtn"
-                    Padding="0"
-                    AutomationProperties.Name="Explore all models"
-                    Click="ModelsBtn_Click">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <TextBlock Text="Explore all models" />
-                        <FontIcon FontSize="12" Glyph="&#xE76C;" />
-                    </StackPanel>
-                </HyperlinkButton>
-            </StackPanel>
-
-            <Grid
-                Grid.Row="1"
-                Margin="0,24,0,0"
-                HorizontalAlignment="Center">
-                <Grid
-                    Width="64"
-                    Margin="0,56,0,0"
-                    Padding="12"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    Style="{StaticResource GlassAcrylicGridStyle}">
-                    <Image AutomationProperties.AccessibilityView="Raw" Source="ms-appx:///Assets/ModelIcons/Microsoft.svg" />
-                </Grid>
-                <Grid
-                    Width="42"
-                    Margin="22,0,0,0"
-                    Padding="8"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    Style="{StaticResource GlassAcrylicGridStyle}">
-                    <Image AutomationProperties.AccessibilityView="Raw" Source="ms-appx:///Assets/ModelIcons/OpenAI.png" />
-                </Grid>
-                <Grid
-                    Width="64"
-                    Margin="76,0,0,0"
                     Padding="16"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    Style="{StaticResource GlassAcrylicGridStyle}">
-                    <Image AutomationProperties.AccessibilityView="Raw" Source="ms-appx:///Assets/ModelIcons/Mistral.svg" />
-                </Grid>
-                <Grid
-                    Width="48"
-                    Margin="76,76,0,0"
-                    Padding="8"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    Style="{StaticResource GlassAcrylicGridStyle}">
-                    <Image AutomationProperties.AccessibilityView="Raw" Source="ms-appx:///Assets/ModelIcons/HuggingFace.svg" />
-                </Grid>
-                <Grid
-                    Width="36"
-                    Margin="136,76,0,0"
-                    Padding="6"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    Style="{StaticResource GlassAcrylicGridStyle}">
-                    <Image AutomationProperties.AccessibilityView="Raw" Source="{ThemeResource GitHubIconImage}" />
-                </Grid>
-
-            </Grid>
-        </Grid>
-        <Grid
-            x:Name="CodeFeatureGrid"
-            Grid.Row="2"
-            Grid.Column="2"
-            Grid.ColumnSpan="3"
-            Style="{StaticResource HeroCardGridStyle}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel
-                HorizontalAlignment="Left"
-                Orientation="Vertical"
-                Spacing="8">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="View &amp; export code"
-                    TextWrapping="Wrap" />
-                <TextBlock Text="View code for any sample, or export to a standalone Visual Studio project!" TextWrapping="Wrap" />
-                <Image
-                    Grid.Row="1"
-                    Width="520"
-                    Height="168"
-                    Margin="52,24,-24,-24"
-                    AutomationProperties.AccessibilityView="Raw"
-                    Source="ms-appx:///Assets/Code.svg"
-                    Stretch="UniformToFill" />
-            </StackPanel>
-        </Grid>
-        <Grid
-            x:Name="GitHubGrid"
-            Grid.Row="3"
-            Grid.ColumnSpan="5"
-            HorizontalAlignment="Stretch"
-            Background="{ThemeResource CardGradient1Brush}"
-            ColumnSpacing="12"
-            Style="{StaticResource HeroCardGridStyle}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel
-                HorizontalAlignment="Left"
-                Orientation="Vertical"
-                Spacing="8">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="Open-source"
-                    TextWrapping="Wrap" />
-                <TextBlock Text="This project is open-source, and contributions are always welcome. Check out the repository to learn how it works, report issues, or submit your own improvements and new samples" TextWrapping="Wrap" />
-                <HyperlinkButton
-                    Grid.Row="1"
-                    Padding="0"
-                    AutomationProperties.Name="Explore APIs"
-                    NavigateUri="https://aka.ms/ai-dev-gallery-repo">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <TextBlock Text="AI Dev Gallery repository" />
-                        <FontIcon FontSize="12" Glyph="&#xE76C;" />
+                    Spacing="8">
+                    <TextBlock
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Add local chat to my app"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Build a private chat experience with a local model."
+                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Text" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Runs locally" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Exportable" />
+                        </Border>
                     </StackPanel>
-                </HyperlinkButton>
-            </StackPanel>
-            <Image
+                </StackPanel>
+                </Grid>
+            </Button>
+
+            <!-- Summarize documents -->
+            <Button
                 Grid.Column="1"
-                Width="120"
-                Margin="0,-24,-28,-28"
-                HorizontalAlignment="Right"
-                AutomationProperties.AccessibilityView="Raw"
-                Source="{ThemeResource GitHubIconImage}" />
+                Style="{StaticResource GoalCardButtonStyle}"
+                Tag="summarize-text"
+                Click="Card_Click"
+                AutomationProperties.Name="Summarize documents offline">
+                <Grid Style="{StaticResource GoalCardStyle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource PlaceholderImageStyle}">
+                    <Image Source="ms-appx:///Assets/TileImages/TextSummarization.png" Stretch="UniformToFill" />
+                </Border>
+                <StackPanel
+                    Grid.Row="1"
+                    Padding="16"
+                    Spacing="8">
+                    <TextBlock
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Summarize documents offline"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Extract key points without sending content to the cloud."
+                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Text" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Privacy" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="C#" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+                </Grid>
+            </Button>
+
+            <!-- Analyze images -->
+            <Button
+                Grid.Column="2"
+                Style="{StaticResource GoalCardButtonStyle}"
+                Tag="describe-image"
+                Click="Card_Click"
+                AutomationProperties.Name="Analyze images">
+                <Grid Style="{StaticResource GoalCardStyle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource PlaceholderImageStyle}">
+                    <Image Source="ms-appx:///Assets/TileImages/ClassifyImage.png" Stretch="UniformToFill" />
+                </Border>
+                <StackPanel
+                    Grid.Row="1"
+                    Padding="16"
+                    Spacing="8">
+                    <TextBlock
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Analyze images"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Identify objects, read UI screenshots, or classify photos."
+                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Vision" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="NPU ready" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Image" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+                </Grid>
+            </Button>
+
+            <!-- Transcribe audio -->
+            <Button
+                Grid.Row="1"
+                Style="{StaticResource GoalCardButtonStyle}"
+                Tag="transcribe-audio"
+                Click="Card_Click"
+                AutomationProperties.Name="Transcribe audio">
+                <Grid Style="{StaticResource GoalCardStyle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource PlaceholderImageStyle}">
+                    <Image Source="ms-appx:///Assets/TileImages/Transcription.png" Stretch="UniformToFill" />
+                </Border>
+                <StackPanel
+                    Grid.Row="1"
+                    Padding="16"
+                    Spacing="8">
+                    <TextBlock
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Transcribe audio"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Turn speech into text for notes, captions, or search."
+                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Audio" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Runs locally" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+                </Grid>
+            </Button>
+
+            <!-- Generate app content -->
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Style="{StaticResource GoalCardButtonStyle}"
+                Tag="generate-text"
+                Click="Card_Click"
+                AutomationProperties.Name="Generate app content">
+                <Grid Style="{StaticResource GoalCardStyle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource PlaceholderImageStyle}">
+                    <Image Source="ms-appx:///Assets/TileImages/TextGeneration.png" Stretch="UniformToFill" />
+                </Border>
+                <StackPanel
+                    Grid.Row="1"
+                    Padding="16"
+                    Spacing="8">
+                    <TextBlock
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Generate app content"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Create titles, descriptions, or suggestions in your UI."
+                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Text" />
+                        </Border>
+                        <Border Style="{StaticResource TagPillStyle}">
+                            <TextBlock Style="{StaticResource TagTextStyle}" Text="Creative" />
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+                </Grid>
+            </Button>
+
+            <!-- Browse all samples -->
+            <Button
+                Grid.Row="1"
+                Grid.Column="2"
+                Style="{StaticResource GoalCardButtonStyle}"
+                Tag="Samples"
+                Click="Card_Click"
+                AutomationProperties.Name="Browse all samples">
+                <Grid Style="{StaticResource GoalCardStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Style="{StaticResource PlaceholderImageStyle}">
+                        <Image Source="ms-appx:///Assets/TileImages/SemanticSearch.png" Stretch="UniformToFill" />
+                    </Border>
+                    <StackPanel
+                        Grid.Row="1"
+                        Padding="16"
+                        Spacing="8">
+                        <TextBlock
+                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                            Text="Browse all samples"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Already know what you need? Go to the full gallery."
+                            TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock
+                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                Text="Explore samples" />
+                            <FontIcon
+                                FontSize="12"
+                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                Glyph="&#xE76C;" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Button>
         </Grid>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="LayoutVisualStates">
-                <VisualState x:Name="WideLayout">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800" />
-                    </VisualState.StateTriggers>
-                </VisualState>
-                <VisualState x:Name="NarrowLayout">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="WCRFeatureGrid.(Grid.Column)" Value="0" />
-                        <Setter Target="CodeFeatureGrid.(Grid.Column)" Value="0" />
-                        <Setter Target="WCRFeatureGrid.(Grid.Row)" Value="2" />
-                        <Setter Target="ModelsFeatureGrid.(Grid.Row)" Value="3" />
-                        <Setter Target="CodeFeatureGrid.(Grid.Row)" Value="4" />
-                        <Setter Target="SamplesFeatureGrid.(Grid.ColumnSpan)" Value="5" />
-                        <Setter Target="WCRFeatureGrid.(Grid.ColumnSpan)" Value="5" />
-                        <Setter Target="ModelsFeatureGrid.(Grid.ColumnSpan)" Value="5" />
-                        <Setter Target="CodeFeatureGrid.(Grid.ColumnSpan)" Value="5" />
-                        <Setter Target="GitHubGrid.(Grid.Row)" Value="5" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </UserControl>

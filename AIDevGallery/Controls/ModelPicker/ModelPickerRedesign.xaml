@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl
+    x:Class="AIDevGallery.Controls.ModelPickerRedesign"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    Visibility="Collapsed"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ThemeShadow x:Name="RedesignShadow" />
+        <SolidColorBrush x:Key="RedesignSmokeBrush" Color="#4D000000" />
+        <Style x:Key="ModelRowCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+            <Setter Property="MinHeight" Value="60" />
+        </Style>
+    </UserControl.Resources>
+    <Grid TabFocusNavigation="Cycle">
+        <!--  Light-dismiss smoke layer  -->
+        <Grid
+            x:Name="SmokeGrid"
+            Background="{StaticResource RedesignSmokeBrush}"
+            HighContrastAdjustment="None"
+            Tapped="SmokeGrid_Tapped" />
+
+        <!--  Centered dialog surface  -->
+        <Grid
+            MaxWidth="720"
+            MaxHeight="640"
+            Margin="48,12,48,12"
+            Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+            BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
+            Shadow="{StaticResource RedesignShadow}"
+            Translation="0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Grid
+                Grid.Row="0"
+                Padding="20,16"
+                Background="{ThemeResource NavigationViewContentBackground}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,0,0,1"
+                CornerRadius="{StaticResource OverlayCornerRadius}">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="Choose a model" />
+                <Button
+                    x:Name="CloseButton"
+                    Padding="8"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="Close"
+                    Click="CloseButton_Click"
+                    Content="{ui:FontIcon Glyph=&#xE894;,
+                                          FontSize=16}"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    ToolTipService.ToolTip="Close" />
+            </Grid>
+
+            <!--  Redesign canvas: header-grouped single radio selection, Windows Settings card rows  -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Padding="20,16" Spacing="4">
+                    <!--  Windows AI APIs group  -->
+                    <TextBlock
+                        Margin="4,0,0,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Windows AI APIs" />
+
+                    <Border Style="{StaticResource ModelRowCardStyle}">
+                        <Grid Padding="12,8,16,8" ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <RadioButton
+                                x:Name="ApiRadio"
+                                MinWidth="0"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Image Description"
+                                GroupName="ModelChoice"
+                                IsChecked="True" />
+                            <Image
+                                Grid.Column="1"
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
+                                Source="ms-appx:///Assets/ModelIcons/WCRAPI.png" />
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <TextBlock Text="Image Description" />
+                                <TextBlock
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="Built into Windows · No download" />
+                            </StackPanel>
+                            <Button
+                                Grid.Column="3"
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="More options for Image Description"
+                                Style="{StaticResource SubtleButtonStyle}"
+                                ToolTipService.ToolTip="More">
+                                <FontIcon FontSize="16" Glyph="&#xE712;" />
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                            Click="OpenLink_Click"
+                                            Tag="https://learn.microsoft.com/windows/ai/apis/"
+                                            Text="API documentation">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE774;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!--  Custom models group  -->
+                    <TextBlock
+                        Margin="4,16,0,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="Custom models" />
+
+                    <Border Style="{StaticResource ModelRowCardStyle}">
+                        <Grid Padding="12,8,16,8" ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <RadioButton
+                                MinWidth="0"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Phi 3 Vision CPU"
+                                GroupName="ModelChoice" />
+                            <Image
+                                Grid.Column="1"
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
+                                Source="ms-appx:///Assets/ModelIcons/Onnx.png" />
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <TextBlock Text="Phi 3 Vision CPU" />
+                                <TextBlock
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="3.0 GB · Downloaded" />
+                            </StackPanel>
+                            <Button
+                                Grid.Column="3"
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="More options for Phi 3 Vision CPU"
+                                Style="{StaticResource SubtleButtonStyle}"
+                                ToolTipService.ToolTip="More">
+                                <FontIcon FontSize="16" Glyph="&#xE712;" />
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                            Click="OpenLink_Click"
+                                            Tag="https://huggingface.co/microsoft/Phi-3-vision-128k-instruct"
+                                            Text="Model card">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE774;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem
+                                            Click="OpenLink_Click"
+                                            Tag="https://huggingface.co/microsoft/Phi-3-vision-128k-instruct/blob/main/LICENSE"
+                                            Text="License" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource ModelRowCardStyle}">
+                        <Grid Padding="12,8,16,8" ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <RadioButton
+                                x:Name="Phi35Radio"
+                                MinWidth="0"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Phi 3.5 Vision CPU"
+                                Checked="Phi35Radio_Checked"
+                                GroupName="ModelChoice" />
+                            <Image
+                                Grid.Column="1"
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
+                                Source="ms-appx:///Assets/ModelIcons/Onnx.png" />
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <TextBlock Text="Phi 3.5 Vision CPU" />
+                                <TextBlock
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="3.0 GB · Not downloaded" />
+                            </StackPanel>
+                            <Button
+                                Grid.Column="3"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Download Phi 3.5 Vision CPU"
+                                ToolTipService.ToolTip="Download">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon FontSize="14" Glyph="&#xE896;" />
+                                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="Download" />
+                                </StackPanel>
+                            </Button>
+                            <Button
+                                Grid.Column="4"
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="More options for Phi 3.5 Vision CPU"
+                                Style="{StaticResource SubtleButtonStyle}"
+                                ToolTipService.ToolTip="More">
+                                <FontIcon FontSize="16" Glyph="&#xE712;" />
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem
+                                            Click="OpenLink_Click"
+                                            Tag="https://huggingface.co/microsoft/Phi-3.5-vision-instruct"
+                                            Text="Model card">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE774;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem
+                                            Click="OpenLink_Click"
+                                            Tag="https://huggingface.co/microsoft/Phi-3.5-vision-instruct/blob/main/LICENSE"
+                                            Text="License" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!--  Learn more (Windows Settings related-support style, expanded)  -->
+                    <toolkit:SettingsExpander
+                        Margin="0,12,0,0"
+                        Description="Compare Windows AI APIs and custom models"
+                        Header="Learn more about model options"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE774;}"
+                        IsExpanded="True">
+                        <toolkit:SettingsExpander.Items>
+                            <toolkit:SettingsCard
+                                Click="OpenLink_Click"
+                                Header="Choose your Windows AI solution"
+                                IsClickEnabled="True"
+                                Tag="https://learn.microsoft.com/en-us/windows/ai/windows-ai-comparison">
+                                <toolkit:SettingsCard.ActionIcon>
+                                    <FontIcon Glyph="&#xE8A7;" />
+                                </toolkit:SettingsCard.ActionIcon>
+                            </toolkit:SettingsCard>
+                        </toolkit:SettingsExpander.Items>
+                    </toolkit:SettingsExpander>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>
+

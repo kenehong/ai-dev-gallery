@@ -13,8 +13,6 @@ namespace AIDevGallery.Pages;
 
 internal sealed partial class HomePage : Page
 {
-    private ObservableCollection<MostRecentlyUsedItem> mostRecentlyUsedItems = new ObservableCollection<MostRecentlyUsedItem>();
-
     public HomePage()
     {
         this.InitializeComponent();
@@ -31,22 +29,6 @@ internal sealed partial class HomePage : Page
         if (!App.AppData.IsDiagnosticsMessageDismissed && PrivacyConsentHelpers.IsPrivacySensitiveRegion())
         {
             DiagnosticsInfoBar.IsOpen = true;
-        }
-
-        LoadRecentlyUsedItems();
-    }
-
-    private void LoadRecentlyUsedItems()
-    {
-        if (App.AppData.MostRecentlyUsedItems.Count > 0)
-        {
-            RecentPanel.Visibility = Visibility.Visible;
-
-            foreach (var item in App.AppData.MostRecentlyUsedItems)
-            {
-                item.Description = item.Description;
-                mostRecentlyUsedItems.Add(item);
-            }
         }
     }
 
@@ -66,13 +48,5 @@ internal sealed partial class HomePage : Page
         App.AppData.IsDiagnosticsMessageDismissed = true;
         App.AppData.IsDiagnosticDataEnabled = isEnabled;
         await App.AppData.SaveAsync();
-    }
-
-    private void MRUView_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
-    {
-        if (args.InvokedItem is MostRecentlyUsedItem mru)
-        {
-            App.MainWindow.Navigate(mru);
-        }
     }
 }

@@ -110,6 +110,14 @@ internal sealed partial class ModelOrApiPicker : UserControl
                 }
             }
 
+            // ponytail: default to a device-compatible Windows AI API so a sample can be tried before any download.
+            // ceiling: Compatible = Ready OR NotReady (NotReady = a one-time OS-managed component download that
+            // SampleContainer handles gracefully). Tighten to GetApiAvailability(type) == Ready for instant-only.
+            // On unsupported devices no WCR API is Compatible, so this stays null and falls back to the ONNX flow.
+            modelToPreselect ??= models.FirstOrDefault(m =>
+                m.HardwareAccelerators.Contains(HardwareAccelerator.WCRAPI) &&
+                ModelCompatibility.GetModelCompatibility(m).CompatibilityState == ModelCompatibilityState.Compatible);
+
             selectedModels.Add(modelToPreselect);
         }
 

@@ -85,7 +85,7 @@ internal sealed partial class SuperResolution : BaseSamplePage
 
             try
             {
-                var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+                await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
             }
             catch (Exception ex)
             {

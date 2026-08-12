@@ -88,7 +88,7 @@ internal sealed partial class YOLOObjectDetection : BaseSamplePage
 
             try
             {
-                var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+                await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
             }
             catch (Exception ex)
             {

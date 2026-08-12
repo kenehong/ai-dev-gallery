@@ -132,7 +132,7 @@ internal sealed partial class FaceDetection : BaseSamplePage
 
             try
             {
-                var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+                await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
             }
             catch (Exception ex)
             {

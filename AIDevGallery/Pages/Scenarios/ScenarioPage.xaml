@@ -389,6 +389,23 @@
                         Margin="0,6"
                         Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
                     <Button
+                        x:Name="DocsButton"
+                        Padding="12,6,12,6"
+                        VerticalAlignment="Stretch"
+                        AutomationProperties.Name="View docs for the selected model or API"
+                        Click="DocsButton_Click"
+                        Style="{StaticResource SubtleButtonStyle}"
+                        ToolTipService.ToolTip="View docs for the selected model or API">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon FontSize="16" Glyph="&#xE7C3;" />
+                            <TextBlock Margin="0,-1,0,0" Text="Docs" />
+                        </StackPanel>
+                    </Button>
+                    <Rectangle
+                        Width="1"
+                        Margin="0,6"
+                        Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                    <Button
                         x:Name="ExportSampleToggle"
                         Padding="12,6,12,6"
                         AutomationProperties.Name="Export sample"

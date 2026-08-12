@@ -68,7 +68,7 @@ internal sealed partial class VideoSuperRes : BaseSamplePage
             await InitializeCameraPreviewControl();
 
             var catalog = ExecutionProviderCatalog.GetDefault();
-            await catalog.EnsureAndRegisterCertifiedAsync();
+            await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
 
             var readyState = VideoScaler.GetReadyState();
             if (readyState == AIFeatureReadyState.NotSupportedOnCurrentSystem)

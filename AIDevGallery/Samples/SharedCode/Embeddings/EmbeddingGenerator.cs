@@ -42,7 +42,7 @@ internal partial class EmbeddingGenerator : IDisposable, IEmbeddingGenerator<str
 
         try
         {
-            var registeredProviders = await catalog.EnsureAndRegisterCertifiedAsync();
+            await AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog);
         }
         catch (Exception ex)
         {

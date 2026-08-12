@@ -229,5 +229,7 @@
                     Duration="0:0:0.187" />
             </animations:Implicit.HideAnimations>
         </controls:ModelOrApiPicker>
+        <!--  ponytail: sandbox preview overlay, auto-shown at startup to bypass the flaky Settings-nav crash. Remove before PR.  -->
+        <controls:ModelPickerRedesign x:Name="pickerRedesign" Grid.Row="1" />
     </Grid>
 </winuiex:WindowEx>

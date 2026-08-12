@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:AIDevGallery.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AIDevGallery.Models"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
@@ -184,6 +185,18 @@
                             </DataTemplate>
                         </toolkit:SettingsExpander.ItemTemplate>
                     </toolkit:SettingsExpander>
+                    <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Design playground" />
+                    <toolkit:SettingsCard
+                        Description="Sandbox for the in-progress model picker redesign. Does not affect the live picker."
+                        Header="Model picker redesign"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xEB3C;}">
+                        <Button
+                            AutomationProperties.Name="Open model picker redesign"
+                            Click="OpenPickerRedesign_Click"
+                            Content="Open"
+                            ToolTipService.ToolTip="Open the redesign sandbox" />
+                    </toolkit:SettingsCard>
+
                     <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Diagnostics &amp; feedback" />
                     <toolkit:SettingsCard
                         Description="Help us improve this app by sharing optional diagnostics data to inform bug fixes, performance, and feature enhancements"
@@ -233,5 +246,8 @@
                     IsIndeterminate="True" />
             </StackPanel>
         </ContentDialog>
+
+        <!--  Design playground: picker redesign sandbox overlay (fills the page above content)  -->
+        <local:ModelPickerRedesign x:Name="PickerRedesignOverlay" />
     </Grid>
 </Page>

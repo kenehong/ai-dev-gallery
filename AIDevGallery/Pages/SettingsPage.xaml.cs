@@ -38,6 +38,11 @@ internal sealed partial class SettingsPage : Page
         endMoveCommand = new RelayCommand(() => _cts?.Cancel());
     }
 
+    private void OpenPickerRedesign_Click(object sender, RoutedEventArgs e)
+    {
+        PickerRedesignOverlay.Show();
+    }
+
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);

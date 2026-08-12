@@ -161,7 +161,7 @@ internal static class DeviceUtils
 
                 try
                 {
-                    catalog.EnsureAndRegisterCertifiedAsync().GetAwaiter().GetResult();
+                    AIDevGallery.Samples.SharedCode.WinMLHelpers.EnsureAndRegisterCertifiedEpsAsync(catalog).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
