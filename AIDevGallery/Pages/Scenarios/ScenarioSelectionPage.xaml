@@ -16,9 +16,9 @@
         IsPaneToggleButtonVisible="True"
         IsPaneVisible="True"
         IsSettingsVisible="False"
+        ItemInvoked="NavView_ItemInvoked"
         OpenPaneLength="276"
-        PaneDisplayMode="Auto"
-        SelectionChanged="NavView_SelectionChanged">
+        PaneDisplayMode="Auto">
         <NavigationView.Resources>
             <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
@@ -26,33 +26,10 @@
             <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
         </NavigationView.Resources>
         <NavigationView.PaneHeader>
-            <Grid Margin="16,12,0,12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Samples" />
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="0,0,4,0"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal"
-                    Spacing="2">
-                    <FontIcon
-                        AutomationProperties.AccessibilityView="Raw"
-                        FontSize="14"
-                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                        Glyph="&#xE71C;" />
-                    <ComboBox
-                        AutomationProperties.Name="Filters"
-                        DisplayMemberPath="Text"
-                        ItemsSource="{x:Bind filters}"
-                        SelectedIndex="0"
-                        SelectedValuePath="Tag"
-                        SelectionChanged="ComboBox_SelectionChanged"
-                        Style="{StaticResource SubtleComboBoxStyle}" />
-                </StackPanel>
-            </Grid>
+            <TextBlock
+                Margin="16,12,0,12"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="Samples" />
         </NavigationView.PaneHeader>
         <NavigationView.Content>
             <Frame x:Name="NavFrame" />
