@@ -18,7 +18,7 @@
         <ThemeShadow x:Name="DialogShadow" />
         <SolidColorBrush x:Key="AppSmokeBrush" Color="#4D000000" />
     </UserControl.Resources>
-	<Grid x:Name="ModelOrApiPickerOverlayRoot" TabFocusNavigation="Cycle">
+    <Grid x:Name="ModelOrApiPickerOverlayRoot" TabFocusNavigation="Cycle">
         <Grid
             x:Name="ShadowGrid"
             Background="{ThemeResource AppSmokeBrush}"
@@ -108,16 +108,26 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="0,1,0,0"
                 CornerRadius="0,0,8,8"
+                ColumnSpacing="8"
                 RowSpacing="8"
                 Translation="0,0,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Models selected for this sample" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.ColumnSpan="3"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="Model selection" />
                 <ItemsRepeater
                     x:Name="SelectedModelsRepeater"
                     Grid.Row="1"
+                    Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     ItemsSource="{x:Bind modelSelectionItems}">
@@ -151,7 +161,8 @@
                                     <Grid RowSpacing="4" Visibility="{x:Bind utils:XamlHelpers.VisibleWhenNotNull(SelectedModel), Mode=OneWay}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Image
                                             Width="20"
@@ -162,6 +173,7 @@
                                             FontWeight="SemiBold"
                                             Text="{x:Bind SelectedModel.Name, Mode=OneWay}" />
                                         <ItemsRepeater
+                                            Grid.RowSpan="3"
                                             Margin="0,0,4,0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"
@@ -190,6 +202,11 @@
                                                 </DataTemplate>
                                             </ItemsRepeater.ItemTemplate>
                                         </ItemsRepeater>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind SelectionStatusText, Mode=OneWay}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -197,19 +214,23 @@
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>
                 <Button
-                    x:Name="SaveButton"
                     Grid.Row="1"
-                    Width="120"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Stretch"
-                    AutomationProperties.Name="Run sample"
-                    Click="OnSave_Clicked"
-                    Style="{StaticResource AccentButtonStyle}">
-                    <StackPanel Orientation="Vertical" Spacing="4">
-                        <FontIcon FontSize="14" Glyph="&#xE72A;" />
-                        <TextBlock Text="Run sample" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Button>
+                    Grid.Column="1"
+                    MinWidth="96"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="Cancel model selection"
+                    Click="OnCancel_Clicked"
+                    Content="Cancel" />
+                <Button
+                    x:Name="ApplyButton"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    MinWidth="96"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="Apply model selection"
+                    Click="OnApply_Clicked"
+                    Content="Apply"
+                    Style="{StaticResource AccentButtonStyle}" />
             </Grid>
         </Grid>
 
