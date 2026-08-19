@@ -23,12 +23,8 @@ internal sealed partial class OnnxPickerView : BaseModelPickerView
 {
     private List<ModelDetails> models = [];
     private List<ModelType>? modelTypes;
-
-    public ModelDetails? Selected { get; private set; }
-
-    private ObservableCollection<AvailableModel> AvailableModels { get; } = [];
-    private ObservableCollection<DownloadableModel> DownloadableModels { get; } = [];
-    private ObservableCollection<BaseModel> UnavailableModels { get; } = [];
+    private string? selectedModelId;
+    private ObservableCollection<OnnxModelPickerRow> ModelRows { get; } = [];
 
     public OnnxPickerView()
     {
@@ -71,9 +67,7 @@ internal sealed partial class OnnxPickerView : BaseModelPickerView
     private void ResetAndLoadModelList()
     {
         models.Clear();
-        AvailableModels.Clear();
-        DownloadableModels.Clear();
-        UnavailableModels.Clear();
+        ModelRows.Clear();
 
         if (modelTypes == null || modelTypes.Count == 0)
         {
@@ -90,49 +84,24 @@ internal sealed partial class OnnxPickerView : BaseModelPickerView
             return;
         }
 
+        HashSet<string> modelUrls = [];
         foreach (var model in models)
         {
-            if (!model.IsOnnxModel())
+            if (!model.IsOnnxModel() || !modelUrls.Add(model.Url))
             {
                 continue;
             }
 
             if (model.Compatibility.CompatibilityState == ModelCompatibilityState.NotCompatible)
             {
-                // UnavailableModels.Add(new DownloadableModel(model));
+                continue;
             }
-            else if (!App.ModelCache.IsModelCached(model.Url))
-            {
-                // Needs to be in the downloads list
-                var existingDownloadableModel = DownloadableModels.FirstOrDefault(m => m.ModelDetails.Url == model.Url);
-                if (existingDownloadableModel == null)
-                {
-                    DownloadableModels.Add(new DownloadableModel(model));
-                }
 
-                // remove if already in the availablelist
-                var existingAvailableModel = AvailableModels.FirstOrDefault(m => m?.ModelDetails.Url == model.Url);
-                if (existingAvailableModel != null)
-                {
-                    AvailableModels.Remove(existingAvailableModel);
-                }
-            }
-            else
+            var row = new OnnxModelPickerRow(model, App.ModelCache.IsModelCached(model.Url))
             {
-                // needs to be in the available list
-                var existingAvailableModel = AvailableModels.FirstOrDefault(m => m?.ModelDetails.Url == model.Url);
-                if (existingAvailableModel == null)
-                {
-                    AvailableModels.Add(new AvailableModel(model));
-                }
-
-                // remove if already in the downloadable list
-                var existingDownloadableModel = DownloadableModels.FirstOrDefault(m => m.ModelDetails.Url == model.Url);
-                if (existingDownloadableModel != null)
-                {
-                    DownloadableModels.Remove(existingDownloadableModel);
-                }
-            }
+                IsSelected = model.Id == selectedModelId && App.ModelCache.IsModelCached(model.Url)
+            };
+            ModelRows.Add(row);
         }
     }
 
@@ -141,73 +110,24 @@ internal sealed partial class OnnxPickerView : BaseModelPickerView
         DispatcherQueue.TryEnqueue(ResetAndLoadModelList);
     }
 
-    private void ModelSelectionItemsView_SelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
-    {
-        if (sender.SelectedItem is AvailableModel model)
-        {
-            OnSelectedModelChanged(this, model.ModelDetails);
-        }
-    }
-
     public override void SelectModel(ModelDetails? modelDetails)
     {
-        if (modelDetails != null)
+        selectedModelId = modelDetails?.Id;
+        foreach (var row in ModelRows)
         {
-            var availableModel = AvailableModels.FirstOrDefault(m => m.ModelDetails.Id == modelDetails.Id);
-            if (availableModel != null)
-            {
-                DispatcherQueue.TryEnqueue(() => ModelSelectionItemsView.Select(AvailableModels.IndexOf(availableModel)));
-            }
-            else
-            {
-                DispatcherQueue.TryEnqueue(() => ModelSelectionItemsView.DeselectAll());
-            }
-        }
-        else
-        {
-            DispatcherQueue.TryEnqueue(() => ModelSelectionItemsView.DeselectAll());
+            row.IsSelected = row.IsInstalled && row.ModelDetails.Id == selectedModelId;
         }
     }
 
-    private void StopPropagatingHandler(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private void SelectModelButton_Click(object sender, RoutedEventArgs e)
     {
-        e.Handled = true;
-    }
-
-    private void ItemContainer_GotFocus(object sender, RoutedEventArgs e)
-    {
-        var item = sender as FrameworkElement;
-        var focusedModel = item?.Tag as IModelView;
-
-        ShowOptionsButtonForFocusedModel(focusedModel);
-    }
-
-    private void ItemContainer_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-    {
-        var item = sender as FrameworkElement;
-        var focusedModel = item?.Tag as IModelView;
-
-        ShowOptionsButtonForFocusedModel(focusedModel);
-    }
-
-    private void ShowOptionsButtonForFocusedModel(IModelView? focusedModel)
-    {
-        List<IModelView> models = AvailableModels.Cast<IModelView>()
-            .Concat(DownloadableModels.Cast<IModelView>())
-            .Concat(UnavailableModels.Cast<IModelView>())
-            .ToList();
-
-        foreach (var model in models)
+        if (sender is not Button { Tag: OnnxModelPickerRow row } || !row.IsInstalled)
         {
-            if (focusedModel == model)
-            {
-                focusedModel.OptionsVisible = true;
-            }
-            else
-            {
-                model.OptionsVisible = false;
-            }
+            return;
         }
+
+        SelectModel(row.ModelDetails);
+        OnSelectedModelChanged(this, row.ModelDetails);
     }
 
     private void OpenModelFolder_Click(object sender, RoutedEventArgs e)
@@ -312,19 +232,20 @@ internal sealed partial class OnnxPickerView : BaseModelPickerView
 
     private async void DownloadModelButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is DownloadableModel downloadableModel)
+        if (sender is Button { Tag: OnnxModelPickerRow row })
         {
-            var downloadSource = downloadableModel.ModelDetails.Url.StartsWith("https://github.com", StringComparison.InvariantCultureIgnoreCase) ? "GitHub" : "Hugging Face";
-            var license = LicenseInfo.GetLicenseInfo(downloadableModel.ModelDetails.License);
+            var downloadSource = row.ModelDetails.Url.StartsWith("https://github.com", StringComparison.InvariantCultureIgnoreCase) ? "GitHub" : "Hugging Face";
+            var license = LicenseInfo.GetLicenseInfo(row.ModelDetails.License);
 
-            ModelNameTxt.Text = downloadableModel.ModelDetails.Name;
+            ModelNameTxt.Text = row.ModelDetails.Name;
             ModelSourceTxt.Text = downloadSource;
-            ModelLicenseLink.NavigateUri = new Uri(license.LicenseUrl ?? downloadableModel.ModelDetails.Url);
+            ModelLicenseLink.NavigateUri = new Uri(license.LicenseUrl ?? row.ModelDetails.Url);
             ModelLicenseLabel.Text = license.Name;
 
-            if (downloadableModel.Compatibility.CompatibilityState != ModelCompatibilityState.Compatible)
+            WarningInfoBar.IsOpen = false;
+            if (row.ModelDetails.Compatibility.CompatibilityState != ModelCompatibilityState.Compatible)
             {
-                WarningInfoBar.Message = downloadableModel.Compatibility.CompatibilityIssueDescription;
+                WarningInfoBar.Message = row.ModelDetails.Compatibility.CompatibilityIssueDescription;
                 WarningInfoBar.IsOpen = true;
             }
 
@@ -334,8 +255,24 @@ internal sealed partial class OnnxPickerView : BaseModelPickerView
 
             if (output == ContentDialogResult.Primary)
             {
-                downloadableModel.StartDownload();
+                row.StartDownload();
             }
+        }
+    }
+
+    private void CancelDownloadButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: OnnxModelPickerRow row })
+        {
+            row.CancelDownload();
+        }
+    }
+
+    private void RetryDownloadButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: OnnxModelPickerRow row })
+        {
+            row.StartDownload();
         }
     }
 

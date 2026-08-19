@@ -44,19 +44,37 @@ internal sealed partial class ModelOrApiPicker : UserControl
         {
             for (var i = 0; i < selectedModels.Count; i++)
             {
-                modelSelectionItems[i].SelectedModel = selectedModels[i];
+                modelSelectionItems[i].SetAppliedSelection(selectedModels[i]);
             }
         }
 
-        ValidateSaveButton();
+        RestorePickerSelections();
+        ValidateApplyButton();
         this.Visibility = Visibility.Visible;
         CancelButton.Focus(FocusState.Programmatic);
     }
 
     public void Hide()
     {
+        foreach (var item in modelSelectionItems)
+        {
+            item.DiscardPendingSelection();
+        }
+
+        RestorePickerSelections();
         this.Visibility = Visibility.Collapsed;
         OnClosed();
+    }
+
+    private void RestorePickerSelections()
+    {
+        foreach (var item in modelSelectionItems)
+        {
+            foreach (var pickerView in item.ModelPickerViews.Values)
+            {
+                pickerView.SelectModel(item.SelectedModel);
+            }
+        }
     }
 
     private void OnClosed()
@@ -202,11 +220,16 @@ internal sealed partial class ModelOrApiPicker : UserControl
         }
     }
 
-    private void OnSave_Clicked(object sender, RoutedEventArgs e)
+    private void OnApply_Clicked(object sender, RoutedEventArgs e)
     {
         var selectedModels = modelSelectionItems
             .Select(item => item.SelectedModel)
             .ToList();
+
+        foreach (var item in modelSelectionItems)
+        {
+            item.CommitSelection();
+        }
 
         OnSelectedModelsChanged(this, selectedModels);
         Hide();
@@ -261,14 +284,15 @@ internal sealed partial class ModelOrApiPicker : UserControl
 
         modelSelectionItem.SelectedModel = modelDetails;
 
-        ValidateSaveButton();
+        ValidateApplyButton();
     }
 
-    private void ValidateSaveButton()
+    private void ValidateApplyButton()
     {
-        bool isEnabled = modelSelectionItems.All(ms => ms.SelectedModel != null);
+        bool isEnabled = modelSelectionItems.All(ms => ms.SelectedModel != null) &&
+            modelSelectionItems.Any(ms => ms.HasPendingChange);
 
-        SaveButton.IsEnabled = isEnabled;
+        ApplyButton.IsEnabled = isEnabled;
     }
 
     private void ShadowGrid_Loaded(object sender, RoutedEventArgs e)
@@ -347,6 +371,8 @@ internal sealed partial class ModelOrApiPicker : UserControl
 internal class ModelSelectionItem : ObservableObject
 {
     private ModelDetails? selectedModel;
+    private ModelDetails? appliedModel;
+
     public ModelDetails? SelectedModel
     {
         get => selectedModel;
@@ -354,10 +380,16 @@ internal class ModelSelectionItem : ObservableObject
         {
             if (SetProperty(ref selectedModel, value))
             {
+                OnPropertyChanged(nameof(HasPendingChange));
+                OnPropertyChanged(nameof(SelectionStatusText));
                 OnPropertyChanged(nameof(AccessibleName));
             }
         }
     }
+
+    public bool HasPendingChange => SelectedModel?.Id != appliedModel?.Id;
+
+    public string SelectionStatusText => HasPendingChange ? "Pending selection" : "Current selection";
 
     public List<ModelType> ModelTypes { get; set; }
 
@@ -366,7 +398,31 @@ internal class ModelSelectionItem : ObservableObject
         ModelTypes = modelTypes;
     }
 
-    public string AccessibleName => SelectedModel?.Name ?? "No model selected";
+    public string AccessibleName => SelectedModel == null
+        ? "No model selected"
+        : $"{SelectionStatusText}: {SelectedModel.Name}";
+
+    public void SetAppliedSelection(ModelDetails? modelDetails)
+    {
+        appliedModel = modelDetails;
+        SelectedModel = modelDetails;
+        OnPropertyChanged(nameof(HasPendingChange));
+        OnPropertyChanged(nameof(SelectionStatusText));
+        OnPropertyChanged(nameof(AccessibleName));
+    }
+
+    public void CommitSelection()
+    {
+        appliedModel = SelectedModel;
+        OnPropertyChanged(nameof(HasPendingChange));
+        OnPropertyChanged(nameof(SelectionStatusText));
+        OnPropertyChanged(nameof(AccessibleName));
+    }
+
+    public void DiscardPendingSelection()
+    {
+        SelectedModel = appliedModel;
+    }
 
     public Dictionary<string, BaseModelPickerView> ModelPickerViews { get; private set; } = new();
 }
