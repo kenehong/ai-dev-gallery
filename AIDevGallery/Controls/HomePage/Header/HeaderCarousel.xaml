@@ -191,7 +191,7 @@
                            TextAlignment="Center"
                            TextWrapping="Wrap">
                     <Run Text="Build next-gen experiences with on-device AI." />
-                    <Run Text="This app is in" />
+                    <Run Text="This app is in " />
                     <Hyperlink NavigateUri="https://aka.ms/ai-dev-gallery" TabIndex="0">preview</Hyperlink><Run Text="." />
                 </TextBlock>
             </Grid>
