@@ -83,7 +83,7 @@
                 <local:TileGallery animations:Implicit.HideAnimations="{StaticResource HideTransitions}" animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}">
                     <local:TileGallery.Source>
                         <local:SampleRow
-                            CategoryDescription="Generate , summarize, translate text and use semantic understanding using local models"
+                            CategoryDescription="Generate, summarize, translate text and use semantic understanding using local models"
                             CategoryHeader="Read. Write. Rewrite."
                             CategoryImageUrl="ms-appx:///Assets/TileImages/Chat.png">
                             <local:SampleRow.SampleCards>
