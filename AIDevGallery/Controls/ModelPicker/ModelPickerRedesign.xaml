@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
     Visibility="Collapsed"
     mc:Ignorable="d">
@@ -74,9 +73,15 @@
                 <StackPanel Padding="20,16" Spacing="4">
                     <!--  Windows AI APIs group  -->
                     <TextBlock
-                        Margin="4,0,0,4"
+                        Margin="4,0,0,0"
                         Style="{StaticResource BodyStrongTextBlockStyle}"
                         Text="Windows AI APIs" />
+                    <TextBlock
+                        Margin="4,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="Microsoft-managed AI capabilities optimized for supported Windows PCs."
+                        TextWrapping="Wrap" />
 
                     <Border Style="{StaticResource ModelRowCardStyle}">
                         <Grid Padding="12,8,16,8" ColumnSpacing="12">
@@ -105,7 +110,7 @@
                                 <TextBlock
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     Style="{StaticResource CaptionTextBlockStyle}"
-                                    Text="Built into Windows · No download" />
+                                    Text="Built into Windows" />
                             </StackPanel>
                             <Button
                                 Grid.Column="3"
@@ -135,9 +140,15 @@
 
                     <!--  Custom models group  -->
                     <TextBlock
-                        Margin="4,16,0,4"
+                        Margin="4,16,0,0"
                         Style="{StaticResource BodyStrongTextBlockStyle}"
                         Text="Custom models" />
+                    <TextBlock
+                        Margin="4,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="Downloadable ONNX models that run locally with more model and hardware control."
+                        TextWrapping="Wrap" />
 
                     <Border Style="{StaticResource ModelRowCardStyle}">
                         <Grid Padding="12,8,16,8" ColumnSpacing="12">
@@ -266,28 +277,8 @@
                         </Grid>
                     </Border>
 
-                    <!--  Learn more (Windows Settings related-support style, expanded)  -->
-                    <toolkit:SettingsExpander
-                        Margin="0,12,0,0"
-                        Description="Compare Windows AI APIs and custom models"
-                        Header="Learn more about model options"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xE774;}"
-                        IsExpanded="True">
-                        <toolkit:SettingsExpander.Items>
-                            <toolkit:SettingsCard
-                                Click="OpenLink_Click"
-                                Header="Choose your Windows AI solution"
-                                IsClickEnabled="True"
-                                Tag="https://learn.microsoft.com/en-us/windows/ai/windows-ai-comparison">
-                                <toolkit:SettingsCard.ActionIcon>
-                                    <FontIcon Glyph="&#xE8A7;" />
-                                </toolkit:SettingsCard.ActionIcon>
-                            </toolkit:SettingsCard>
-                        </toolkit:SettingsExpander.Items>
-                    </toolkit:SettingsExpander>
                 </StackPanel>
             </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>
-

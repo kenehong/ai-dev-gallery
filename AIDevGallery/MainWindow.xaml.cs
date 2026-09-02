@@ -72,7 +72,6 @@ internal sealed partial class MainWindow : WindowEx
     {
         uiSettings.ColorValuesChanged += Accessibility_HighContrastChanged;
         UpdateResources();
-        pickerRedesign.Show(); // ponytail: sandbox preview, remove before PR
     }
 
     private async Task LoadAppSearchIndex()
@@ -201,6 +200,9 @@ internal sealed partial class MainWindow : WindowEx
                 break;
             case "settings":
                 Navigate(typeof(SettingsPage), obj);
+                break;
+            case "pickerpreview":
+                pickerRedesign.Show(); // ponytail: temporary meeting shortcut, remove before PR
                 break;
         }
     }

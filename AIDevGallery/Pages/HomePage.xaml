@@ -20,7 +20,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <controls:HeaderCarousel Margin="0,0,0,-12" />
+                <controls:HeaderCarousel Margin="0,0,0,32" />
 
                 <controls:GettingStartedSection
                     Grid.Row="2"

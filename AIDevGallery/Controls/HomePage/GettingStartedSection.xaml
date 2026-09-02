@@ -97,12 +97,28 @@
         <Style x:Key="TagTextStyle" BasedOn="{StaticResource CaptionTextBlockStyle}" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
         </Style>
+        <Style x:Key="WorkflowCardStyle" TargetType="Border">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        </Style>
+        <Style x:Key="WorkflowNumberStyle" TargetType="Border">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
     </UserControl.Resources>
     <Grid
         x:Name="ContentGrid"
         Margin="24,0,24,24"
         RowSpacing="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -368,5 +384,200 @@
                 </Grid>
             </Button>
         </Grid>
+
+        <!-- ponytail: static guidance is enough until users need an interactive walkthrough -->
+        <StackPanel
+            Grid.Row="2"
+            Spacing="24">
+            <StackPanel Spacing="8">
+                <TextBlock
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="How it works" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="Choose a goal, try a sample locally, then export a Visual Studio starter project."
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Grid
+                x:Name="WorkflowGrid"
+                ColumnSpacing="16"
+                RowSpacing="16">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup>
+                        <VisualState x:Name="NarrowWorkflow">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="0" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Target="WorkflowGrid.ColumnSpacing" Value="0" />
+                                <Setter Target="WorkflowColumn3.Width" Value="0" />
+                                <Setter Target="WorkflowColumn4.Width" Value="0" />
+                                <Setter Target="WorkflowStep1.Margin" Value="0,0,8,8" />
+                                <Setter Target="WorkflowStep2.Margin" Value="8,0,0,8" />
+                                <Setter Target="WorkflowStep3.(Grid.Row)" Value="1" />
+                                <Setter Target="WorkflowStep3.(Grid.Column)" Value="0" />
+                                <Setter Target="WorkflowStep3.Margin" Value="0,8,8,0" />
+                                <Setter Target="WorkflowStep4.(Grid.Row)" Value="1" />
+                                <Setter Target="WorkflowStep4.(Grid.Column)" Value="1" />
+                                <Setter Target="WorkflowStep4.Margin" Value="8,8,0,0" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="WideWorkflow">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="800" />
+                            </VisualState.StateTriggers>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="WorkflowColumn1" Width="*" />
+                    <ColumnDefinition x:Name="WorkflowColumn2" Width="*" />
+                    <ColumnDefinition x:Name="WorkflowColumn3" Width="*" />
+                    <ColumnDefinition x:Name="WorkflowColumn4" Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Border
+                    x:Name="WorkflowStep1"
+                    Grid.Column="0"
+                    Style="{StaticResource WorkflowCardStyle}">
+                    <StackPanel Spacing="12">
+                        <Border
+                            Style="{StaticResource WorkflowNumberStyle}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="1" />
+                        </Border>
+                        <StackPanel Spacing="4">
+                            <TextBlock
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="Choose a goal"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="Start with chat, images, audio, or another use case."
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Content="Explore samples"
+                            Tag="Samples"
+                            Click="Card_Click" />
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    x:Name="WorkflowStep2"
+                    Grid.Column="1"
+                    Style="{StaticResource WorkflowCardStyle}">
+                    <StackPanel Spacing="12">
+                        <Border
+                            Style="{StaticResource WorkflowNumberStyle}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="2" />
+                        </Border>
+                        <StackPanel Spacing="4">
+                            <TextBlock
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="Use a recommended setup"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="Choose a Windows AI API or local model that fits your PC."
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Content="Explore Windows AI APIs"
+                            Tag="APIs"
+                            Click="Card_Click" />
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    x:Name="WorkflowStep3"
+                    Grid.Column="2"
+                    Style="{StaticResource WorkflowCardStyle}">
+                    <StackPanel Spacing="12">
+                        <Border
+                            Style="{StaticResource WorkflowNumberStyle}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="3" />
+                        </Border>
+                        <StackPanel Spacing="4">
+                            <TextBlock
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="Try it on your device"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="Run the sample with your own input."
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Content="Try an image sample"
+                            Tag="describe-image"
+                            Click="Card_Click" />
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    x:Name="WorkflowStep4"
+                    Grid.Column="3"
+                    Style="{StaticResource WorkflowCardStyle}">
+                    <StackPanel Spacing="12">
+                        <Border
+                            Style="{StaticResource WorkflowNumberStyle}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="4" />
+                        </Border>
+                        <StackPanel Spacing="4">
+                            <TextBlock
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                Text="Build from it"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="View the C# code and export a Visual Studio starter project."
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <HyperlinkButton
+                            HorizontalAlignment="Center"
+                            Content="Browse exportable samples"
+                            Tag="Samples"
+                            Click="Card_Click" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

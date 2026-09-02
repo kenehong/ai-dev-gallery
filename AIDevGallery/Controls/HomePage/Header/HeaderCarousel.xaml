@@ -7,8 +7,6 @@
     xmlns:local="using:AIDevGallery.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
-    Loaded="UserControl_Loaded"
-    Unloaded="UserControl_Unloaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -59,23 +57,26 @@
             </LinearGradientBrush>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="RootGrid" CornerRadius="8,0,0,0">
-        <local:OpacityMaskView HorizontalAlignment="Stretch"
-                               VerticalAlignment="Top">
-            <local:OpacityMaskView.OpacityMask>
-                <Rectangle Fill="{ThemeResource OverlayRadialGradient}" />
-            </local:OpacityMaskView.OpacityMask>
-            <local:AnimatedImage x:Name="BackDropImage"
-                                 Height="400"
-                                 ImageUrl="ms-appx:///Assets/TileImages/BackgroundBlur.png"
-                                 Visibility="Visible">
-                <media:UIElementExtensions.VisualFactory>
-                    <media:PipelineVisualFactory>
-                        <media:BlurEffect Amount="100.0" />
-                    </media:PipelineVisualFactory>
-                </media:UIElementExtensions.VisualFactory>
-            </local:AnimatedImage>
-        </local:OpacityMaskView>
+    <Grid x:Name="RootGrid" CornerRadius="8,0,0,0" MinHeight="440">
+        <Grid.Background>
+            <!-- ponytail: single light gradient per design ref; dark theme keeps this same light hero -->
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="#B8ADE0" />
+                <GradientStop Offset="0.2475" Color="#D1BFE5" />
+                <GradientStop Offset="0.4596" Color="#EDD1C7" />
+                <GradientStop Offset="0.7071" Color="#F5E8D9" />
+            </LinearGradientBrush>
+        </Grid.Background>
+        <!-- Vertical fade: gradient stays vivid up top, fades into the page background toward the bottom -->
+        <Border IsHitTestVisible="False">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="#00F9F9F9" />
+                    <GradientStop Offset="0.55" Color="#00F9F9F9" />
+                    <GradientStop Offset="1" Color="#FFF9F9F9" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
         <Grid
             MaxWidth="1080"
             HorizontalAlignment="Center"
@@ -84,83 +85,14 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-        <ScrollViewer
-            x:Name="scrollViewer"
-            Grid.Column="1"
-            Margin="80,0,0,0"
-            HorizontalScrollBarVisibility="Hidden"
-            VerticalScrollBarVisibility="Disabled"
-            VerticalScrollMode="Disabled">
-            <StackPanel
-                x:Name="TilePanel"
-                Padding="64,0,64,0"
-                Orientation="Horizontal"
-                Spacing="-48">
-                <local:HeaderTile
-                    Description="Chat with a local language model"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Chat"
-                    ImageUrl="ms-appx:///Assets/TileImages/Chat.png"
-                    SampleID="chat"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Summarize text with a local language model"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Text Summarization"
-                    ImageUrl="ms-appx:///Assets/TileImages/TextSummarization.png"
-                    SampleID="summarize-text"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Semantically search text with a local embeddings model"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Semantic Search"
-                    ImageUrl="ms-appx:///Assets/TileImages/SemanticSearch.png"
-                    SampleID="semantic-search"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Generate text with a local model"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Text Generation"
-                    ImageUrl="ms-appx:///Assets/TileImages/TextGeneration.png"
-                    SampleID="generate-text"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Classify the main object of a given photo"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Classify Image"
-                    ImageUrl="ms-appx:///Assets/TileImages/ClassifyImage.png"
-                    SampleID="classify-image"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Simple audio translation to English"
-                    Foreground="{StaticResource LightTextGradient}"
-                    Header="Translate"
-                    ImageUrl="ms-appx:///Assets/TileImages/Translation.png"
-                    SampleID="translate-audio"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Detect items in a photo"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Detect Objects"
-                    ImageUrl="ms-appx:///Assets/TileImages/DetectObjects.png"
-                    SampleID="detect-objects"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Segment an image"
-                    Foreground="{StaticResource LightTextGradient}"
-                    Header="Image Segmentation"
-                    ImageUrl="ms-appx:///Assets/TileImages/ImageSegmentation.png"
-                    SampleID="segment-image"
-                    TabIndex="1" />
-                <local:HeaderTile
-                    Description="Transcribe audio into text"
-                    Foreground="{StaticResource DarkTextGradient}"
-                    Header="Transcribe"
-                    ImageUrl="ms-appx:///Assets/TileImages/Transcription.png"
-                    SampleID="transcribe-audio"
-                    TabIndex="1" />
-            </StackPanel>
-        </ScrollViewer>
+        <!-- Transparent floating object: fit whole, no card clip -->
+        <Image Grid.Column="1"
+               Margin="48,24,0,24"
+               MaxHeight="360"
+               Source="ms-appx:///Assets/HomeHero.png"
+               Stretch="Uniform"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
         <StackPanel Grid.Column="0"
                     MaxWidth="400"
                     Padding="0,12,24,24"

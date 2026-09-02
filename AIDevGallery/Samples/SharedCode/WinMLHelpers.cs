@@ -13,17 +13,25 @@ namespace AIDevGallery.Samples.SharedCode;
 
 internal static class WinMLHelpers
 {
-    // ponytail: amdgpu-ep.dll access-violates on load (0xc0000005) with some AMD driver + WinML AMD GPU EP
-    // combos, and a native AV can't be caught in managed code, so catalog.EnsureAndRegisterCertifiedAsync()
-    // takes the whole process down. Register every certified EP except the AMD GPU one; CPU/OpenVINO/QNN/DML
-    // still load. Upgrade path: delete this and call catalog.EnsureAndRegisterCertifiedAsync() again once the
-    // AMD GPU EP no longer crashes on load.
+    // ponytail: the AMD GPU EP (Name "MIGraphXExecutionProvider", backed by amdgpu-ep.dll) access-violates
+    // on load (0xc0000005 in amdgpu_ep!CreateEpFactories) inside EnsureReadyAsync/TryRegister with WinML AMD
+    // GPU EP 1.8.60.0 on this machine. A native AV can't be caught in managed code, so registering it takes
+    // the whole process down when a sample loads a model. Name is the only identity populated before
+    // EnsureReadyAsync (PackageId/LibraryPath stay empty until then), so skip on Name. CPU/DML/QNN/OpenVINO
+    // and the AMD NPU (VitisAI) still register. Upgrade path: delete the MIGraphX skip and call
+    // catalog.EnsureAndRegisterCertifiedAsync() once the AMD GPU EP no longer crashes on load.
+    private const string AmdGpuProviderName = "MIGraphXExecutionProvider";
+
     public static async System.Threading.Tasks.Task EnsureAndRegisterCertifiedEpsAsync(Microsoft.Windows.AI.MachineLearning.ExecutionProviderCatalog catalog)
     {
         foreach (var provider in catalog.FindAllProviders())
         {
-            var libraryPath = provider.LibraryPath ?? string.Empty;
-            if (libraryPath.Contains("amdgpu-ep", StringComparison.OrdinalIgnoreCase))
+            if (provider.Certification != Microsoft.Windows.AI.MachineLearning.ExecutionProviderCertification.Certified)
+            {
+                continue;
+            }
+
+            if (string.Equals(provider.Name, AmdGpuProviderName, StringComparison.OrdinalIgnoreCase))
             {
                 Debug.WriteLine($"Skipping AMD GPU execution provider '{provider.Name}' (known amdgpu-ep.dll load crash).");
                 continue;
